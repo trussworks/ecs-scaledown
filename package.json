@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint src/main/**.js && eslint src/cleanup/**.js",
+    "package": "ncc build src/main/index.js -o dist && ncc build src/cleanup/index.js -o dist/cleanup",
+    "test": "npm run lint && jest --coverage --verbose"
   },
   "repository": {
     "type": "git",
@@ -16,5 +18,14 @@
   "bugs": {
     "url": "https://github.com/trussworks/ecs-scaledown/issues"
   },
-  "homepage": "https://github.com/trussworks/ecs-scaledown#readme"
+  "homepage": "https://github.com/trussworks/ecs-scaledown#readme",
+  "devDependencies": {
+    "@vercel/ncc": "^0.29.1",
+    "eslint": "^7.32.0",
+    "jest": "^27.0.6"
+  },
+  "dependencies": {
+    "@actions/core": "^1.4.0",
+    "aws-sdk": "^2.969.0"
+  }
 }
