@@ -1,0 +1,20 @@
+{
+  "name": "ecs-scaledown",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trussworks/ecs-scaledown.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/trussworks/ecs-scaledown/issues"
+  },
+  "homepage": "https://github.com/trussworks/ecs-scaledown#readme"
+}
