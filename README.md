@@ -3,7 +3,7 @@
 The purpose of this repository is to provide a GitHub Action to
 scale down an ECS service's desired count to zero.
 
-This action leverages the aws-actions/configure-aws-credentials action.
+This action leverages the aws-actions/configure-aws-credentials action. Since GitHub Actions currently does not allow composite actions to call other actions, we chose to integrate the JavaScript code from existing aws-actions into this repository.
 
 ## What it does
 
@@ -39,4 +39,4 @@ ecs-scaledown:
         cluster: github-runner
 ```
 
-**NOTE**: When using this to deprovision Self-Hosted GitHub runners, you must populate the `needs` argument in the YAML above with all other jobs that are using self-hosted runners.
+**NOTE**: When using this to deprovision Self-Hosted GitHub runners, you must populate the `needs` argument in the YAML above with all jobs that are using self-hosted runners. To do this, replace ALL_OTHER_JOBS with a list of jobs denoted by name.
