@@ -1,0 +1,29 @@
+name: 'Deprovision GitHub Runners'
+description: 'Scale down ECS service count'
+inputs:
+  aws-access-key-id:
+    description: >-
+      AWS Access Key ID. This input is required if running in the GitHub hosted environment.
+      It is optional if running in a self-hosted environment that already has AWS credentials,
+      for example on an EC2 instance.
+    required: false
+  aws-secret-access-key:
+    description: >-
+      AWS Secret Access Key. This input is required if running in the GitHub hosted environment.
+      It is optional if running in a self-hosted environment that already has AWS credentials,
+      for example on an EC2 instance.
+    required: false
+  aws-region:
+    description: 'Your AWS region'
+    required: true
+    default: 'us-east-1'
+  service:
+    description: 'The name of the ECS service.'
+    required: true
+  cluster:
+    description: 'The name of the ECS cluster the service belongs to.'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+  post: 'dist/cleanup/index.js'
