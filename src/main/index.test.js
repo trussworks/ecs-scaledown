@@ -51,6 +51,10 @@ const ENVIRONMENT_VARIABLE_OVERRIDES = {
 };
 const GITHUB_ACTOR_SANITIZED = 'MY-USERNAME_bot_'
 
+//trussWorks additions
+const FAKE_SERVICE = 'fake-service'
+const FAKE_CLUSTER = 'fake-cluster'
+
 function mockGetInput(requestResponse) {
     return function (name, options) { // eslint-disable-line no-unused-vars
         return requestResponse[name]
@@ -64,13 +68,17 @@ const DEFAULT_INPUTS = {
     ...CREDS_INPUTS,
     'aws-session-token': FAKE_SESSION_TOKEN,
     'aws-region': FAKE_REGION,
-    'mask-aws-account-id': 'TRUE'
+    'mask-aws-account-id': 'TRUE',
+    //trussWorks additions
+    'service': FAKE_SERVICE,
+    'cluster': FAKE_CLUSTER  
 };
 const ASSUME_ROLE_INPUTS = {...CREDS_INPUTS, 'role-to-assume': ROLE_ARN, 'aws-region': FAKE_REGION};
 
 const mockStsCallerIdentity = jest.fn();
 const mockStsAssumeRole = jest.fn();
 const mockStsAssumeRoleWithWebIdentity = jest.fn();
+const mockConnectToECS = jest.fn();
 
 jest.mock('aws-sdk', () => {
     return {
@@ -81,6 +89,9 @@ jest.mock('aws-sdk', () => {
             getCallerIdentity: mockStsCallerIdentity,
             assumeRole: mockStsAssumeRole,
             assumeRoleWithWebIdentity: mockStsAssumeRoleWithWebIdentity
+        })),
+        ECS: jest.fn(() => ({
+          updateService: mockConnectToECS
         }))
     };
 });
@@ -713,4 +724,26 @@ describe('Configure AWS Credentials', () => {
         await run();
     });
 
+    //trussworks additions
+    test('action with empty service and cluster inputs fails', async () => {
+      process.env.SHOW_STACK_TRACE = 'false';
+      const mockInputs = {'aws-access-key-id': FAKE_ACCESS_KEY_ID,
+                          'aws-secret-access-key': FAKE_SECRET_ACCESS_KEY,
+                          'aws-region': FAKE_REGION
+      };
+      core.getInput = jest
+          .fn()
+          .mockImplementation(mockGetInput(mockInputs));
+      aws.config.getCredentials.mockReset();
+      aws.config.getCredentials.mockImplementation(callback => {
+          aws.config.credentials = {
+              accessKeyId: ''
+          }
+          callback(null);
+      });
+
+      await run();
+
+      expect(core.setFailed).toHaveBeenCalledWith("Credentials could not be loaded, please check your action inputs: Access key ID empty after loading credentials");
+  });
 });

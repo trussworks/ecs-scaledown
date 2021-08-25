@@ -9,9 +9,9 @@ async function run() {
     const ecs = new aws.ECS({
       customUserAgent: 'amazon-ecs-deploy-task-definition-for-github-actions'
     });
-    await ecs.updateService({ service, cluster, desiredCount: 0 }).promise();
+    await ecs.updateService({ service, cluster, desiredCount: 0 });
   } catch (error) {
-    core.setFailed(error.message);
+    throw new Error(`Could not connect to ECS service. Please check your action inputs: ${error.message}`);
   }
 }
 
