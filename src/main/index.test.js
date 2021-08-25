@@ -78,6 +78,7 @@ const ASSUME_ROLE_INPUTS = {...CREDS_INPUTS, 'role-to-assume': ROLE_ARN, 'aws-re
 const mockStsCallerIdentity = jest.fn();
 const mockStsAssumeRole = jest.fn();
 const mockStsAssumeRoleWithWebIdentity = jest.fn();
+//trussWorks additions
 const mockConnectToECS = jest.fn(() => ({
   promise: jest.fn()
 }));
@@ -92,6 +93,7 @@ jest.mock('aws-sdk', () => {
             assumeRole: mockStsAssumeRole,
             assumeRoleWithWebIdentity: mockStsAssumeRoleWithWebIdentity
         })),
+        //trussWorks additions
         ECS: jest.fn(() => ({
           updateService: mockConnectToECS
         }))
