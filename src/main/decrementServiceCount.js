@@ -5,13 +5,22 @@ async function run() {
   const service = core.getInput('service', { required: true });
   const cluster = core.getInput('cluster', { required: true });
   try {
+    if (!service && !cluster) {
+      core.setFailed('You must specify a service and a cluster')
+    }
+    if (!service) {
+      core.setFailed('You must specify a service')
+    }
+    if (!cluster) {
+      core.setFailed('You must specify a cluster')
+    }
     // Connect to ecs and pull the task definition
     const ecs = new aws.ECS({
       customUserAgent: 'amazon-ecs-deploy-task-definition-for-github-actions'
     });
     await ecs.updateService({ service, cluster, desiredCount: 0 }).promise();
   } catch (error) {
-    throw new Error(`Could not connect to ECS service. Please check your action inputs: ${error.message}`);
+    core.setFailed(error.message)
   }
 }
 
