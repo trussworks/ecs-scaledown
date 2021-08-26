@@ -19,10 +19,34 @@ const SERVICE_ONLY = {
 const CLUSTER_ONLY = {
   cluster: FAKE_CLUSTER
 }
+const ALL_INPUTS = {
+  service: FAKE_SERVICE,
+  cluster: FAKE_CLUSTER
+}
+
+const mockUpdateService = jest.fn()
+
+jest.mock('aws-sdk', () => {
+  return {
+    ECS: jest.fn(() => ({
+      updateService: mockUpdateService
+    }))
+  }
+})
 
 describe('Decrement Service Count', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    mockUpdateService.mockReset();
+    mockUpdateService
+      .mockReturnValueOnce({
+        promise() {
+          return Promise.resolve({ service: {
+            desiredCount: 0
+          }})
+        }
+      })
   })
 
   test('action fails when service and cluster are not set', async () => {
@@ -50,5 +74,12 @@ describe('Decrement Service Count', () => {
     await run();
 
     expect(core.setFailed)
+  })
+
+  test('when a valid cluster and service are provided, function runs successfully', async () => {
+    core.getInput = jest
+      .fn()
+      .mockImplementation(mockGetInput(ALL_INPUTS))
+    await run();
   })
 });
