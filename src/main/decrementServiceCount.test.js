@@ -81,6 +81,6 @@ describe('Decrement Service Count', () => {
       .fn()
       .mockImplementation(mockGetInput(ALL_INPUTS))
     await run();
-    expect(mockUpdateService).toHaveBeenCalled()
+    expect(mockUpdateService).toHaveBeenCalledTimes(1)
   })
 });
