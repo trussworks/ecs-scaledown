@@ -82,5 +82,6 @@ describe('Decrement Service Count', () => {
       .mockImplementation(mockGetInput(ALL_INPUTS))
     await run();
     expect(mockUpdateService).toHaveBeenCalledTimes(1)
+    expect(mockUpdateService).toHaveBeenNthCalledWith(1, {'service': FAKE_SERVICE, 'cluster': FAKE_CLUSTER, 'desiredCount': 0})
   })
 });
