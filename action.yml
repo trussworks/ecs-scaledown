@@ -17,12 +17,20 @@ inputs:
     description: 'Your AWS region'
     required: true
     default: 'us-east-1'
+  repository-hash:
+    description: >-
+      If you are using the self-hosted github runner module, the module will generate a hash for naming the container-name,
+      task-definition, service, and cluster. You can populate that unique hash here to specify those and will not need to populate the next 4 variables below.
+    required: false
+    default: ''
   service:
     description: 'The name of the ECS service.'
-    required: true
+    required: false
+    default: ''
   cluster:
     description: 'The name of the ECS cluster the service belongs to.'
-    required: true
+    required: false
+    default: ''
 runs:
   using: 'node12'
   main: 'dist/index.js'
